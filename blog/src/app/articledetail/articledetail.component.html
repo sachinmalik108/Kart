@@ -1,0 +1,98 @@
+<div class="article" fxLayout="column">
+  <div class="Banner" fxLayout>
+    <div fxFlex="80" class="container" fxLayout="column">
+      <h1 class="title">{{article.Title}}</h1>
+      <div fxLayout fxFlexOffset="15px">
+        <div fxLayout fxLayoutGap="8px">
+          
+          <div fxLayout="column">
+
+           
+            <span class="createdat">
+              {{ article.CreatedAt | date: 'longDate' }}
+            </span>
+
+          </div>
+          <div>
+              <div [hidden]="currentUser.EmailAddress !== article.UserEmailAddress">
+            <a [routerLink]="['/editor',article.ID]"> <button mat-stroked-button>Edit Question</button></a>
+          </div>
+        </div>
+          <div >
+              <div [hidden]="currentUser.EmailAddress !== article.UserEmailAddress">
+            <button mat-stroked-button color="warn" (click)="deleteArticle(article.ID)">Delete Question</button>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div fxLayout fxLayoutAlign="center start">
+    <div fxFlex="80" fxLayout="column" class="container">
+      <div fxLayout="column">
+        <div class="articlebody">
+          <p>{{article.Description}}</p>
+        </div>
+        <div fxFlex="20px" class="bottomline">
+
+        </div>
+       
+           
+
+      </div>
+      <div fxLayout fxLayoutAlign="center start" fxFlexOffset="20px" *ngIf="isAuthenticated" >
+
+        <form fxFlex="65" fxLayout="column" class="commentBox" (ngSubmit)="addComment(f)" #f="ngForm">
+          <div fxLayout fxLayoutAlign="center">
+            <textarea fxFlex="100" name="comment" id="" cols="" rows="4" placeholder="Write a comment..." ngModel></textarea>
+          </div>
+          <div fxLayout class="commentboxfooter" fxLayoutAlign="space-between center">
+            <img class="authorimage" [src]="" alt="">
+
+            <button type="submit" mat-raised-button class="postcommentbutton">Post Answer</button>
+          </div>
+        </form>
+
+      </div>
+      <p fxLayout fxLayoutAlign="center start" fxFlexOffset="20px" *ngIf="!isAuthenticated">
+          <a [routerLink]="['/login']">Sign in</a>&nbsp; or &nbsp; <a [routerLink]="['/register']">sign up</a>&nbsp; to add comments on this article.
+      </p>
+
+      <div fxLayout fxLayoutAlign="center start" fxFlexOffset="20px" *ngFor="let comment of comments">
+        <div fxFlex="65" fxLayout="column" class="commentBox">
+         
+            <p>{{ comment.Ans }}</p>  
+          
+          <div fxLayout class="commentboxfooter" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+            <div fxLayout fxLayoutAlign="start center" fxLayoutGap="10px" fxFlex="80">
+              
+               <span class ="votes">
+                 {{comment.Netvotes}}
+               </span>
+              
+              
+              <span class="createdAt">
+                
+                {{ comment.CreatedAt | date: 'longDate' }}    
+              </span>
+            </div>
+            <div>
+              
+                <div [hidden]="!isAuthenticated">
+                <i class="fa fa-thumbs-up" style="font-size:16px;color:red" (click)="AddVote(comment.ID)"></i>
+                </div>
+                <div [hidden]="!isAuthenticated">
+                <i class="fa fa-thumbs-down" style="font-size:16px;color:green" (click)="DeleteVote(comment.ID)"></i>
+              </div>
+              <div [hidden]="currentUser.EmailAddress !== comment.UserEmailAddress">
+                <i class="ion-trash-a" (click)="deleteAnswer(comment.ID)"></i>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div fxFlex="100px"></div>
+</div>
